@@ -5,10 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.javatechnolessons.demo.model.Employee;
 import com.javatechnolessons.demo.model.Project;
 import com.javatechnolessons.demo.model.Role;
-import com.javatechnolessons.demo.repository.IEmployeeJpaRepository;
-import com.javatechnolessons.demo.repository.IProjectJpaRepository;
-import com.javatechnolessons.demo.repository.IRoleJpaRepository;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -20,7 +16,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 // @AutoConfigureTestDatabase (connection = EmbeddedDatabaseConnection.H2)
 public class EmployeeJpaRepositoyTest {
     @Autowired
-    private IEmployeeJpaRepository repoEmpl;
+    private EmployeeJpaRepository repoEmpl;
 
     @Autowired
     private IRoleJpaRepository repoRole;

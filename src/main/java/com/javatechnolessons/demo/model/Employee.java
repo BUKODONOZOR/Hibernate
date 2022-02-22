@@ -55,6 +55,10 @@ public class Employee {
         this.role = role;
     }
 
+    public Employee(String firstName2, String lastName2, boolean b, Role role2) {
+    }
+
+
     public Long getId() {
         return id;
     }
@@ -71,7 +75,7 @@ public class Employee {
         this.firstName = firstName;
     }
 
-    public String getLastName() {
+    public String employee() {
         return lastName;
     }
 
@@ -133,6 +137,21 @@ public class Employee {
     public String toString() {
         return "Employee [employeeid=" + employeeid + ", firstName=" + firstName + ", id=" + id + ", lastName="
                 + lastName + "]";
+    }
+
+
+    public boolean isPresent() {
+        return false;
+    }
+
+
+    public Object get() {
+        return null;
+    }
+
+
+    public String getLastName() {
+        return null;
     }
 
 }

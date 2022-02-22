@@ -1,0 +1,109 @@
+package com.javatechnolessons.demo.controller;
+import java.util.*;
+
+import com.javatechnolessons.demo.model.Employee;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+
+@CrossOrigin(origins = "http://localhost:8080")
+@RestController
+@RequestMapping("")
+public class EmployeeController {
+
+    @Autowired
+	EmployeeJpaRepository EmployeeJpaRepository;
+
+	@GetMapping("/Employees/{id}")
+	public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") long id) {
+		Optional<Employee> EmployeeData = EmployeeJpaRepository.findById(id);
+
+		if (EmployeeData.isPresent()) {
+			return new ResponseEntity<>(EmployeeData.get(), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@GetMapping("/Employees")
+	public ResponseEntity<List<Employee>> getAllEmployees(@RequestParam(required = false) String firstName) {
+		try {
+			List<Employee> Employees = new ArrayList<Employee>();
+
+			if (firstName == null)
+			EmployeeJpaRepository.findAll().forEach(Employees::add);
+			else
+			EmployeeJpaRepository.findByFirstName(firstName).forEach(Employees::add);
+
+			if (Employees.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			}
+
+			return new ResponseEntity<>(Employees, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+
+
+	@PostMapping("/Employees")
+	public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
+		try {
+			Employee _employee = EmployeeJpaRepository
+					.save(new Employee(employee.getFirstName(), employee.getLastName(),
+							false, employee.getRole()));
+			return new ResponseEntity<>(employee, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
+		}
+	}
+
+	@PutMapping("/Employees/{id}")
+	public ResponseEntity<Employee> updateTutorial(@PathVariable("id") long id, @RequestBody Employee employee) {
+		Optional<Employee> EmployeeData = EmployeeJpaRepository.findById(id);
+
+		if (EmployeeData.isPresent()) {
+			Employee _employee = EmployeeData.get();
+			_employee.setFirstName(employee.getFirstName());
+			_employee.setLastName(employee.getLastName());
+			_employee.setRole(employee.getRole());
+			
+			return new ResponseEntity<>(EmployeeJpaRepository.save(_employee), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+
+
+	@DeleteMapping("/Employees/{id}")
+	public ResponseEntity<String> deleteEmployee(@PathVariable("id") long id) {
+		try {
+			EmployeeJpaRepository.deleteById(id);
+				return new ResponseEntity<>("Tutorials DELETE!! ",HttpStatus.NO_CONTENT);
+			} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+		}
+	}
+
+
+
+
+
+
+}
+
+
